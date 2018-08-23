@@ -18,10 +18,10 @@ IGNORE CHR(0) .. CHR(31)
 
 PRODUCTIONS
   Calc                               (. int index = 0; double value = 0.0;
-                                        for (int i = 0; i < 26; i++) mem[i] = 0.0; .) 
+                                        for (int i = 0; i < 26; i++) mem[i] = -1; .) 
   = { Variable                       (. index = token.val[0] - 'A'; .)
       "=" Expression<out value>      (. mem[index] = value;
-                                        IO.WriteLine(value); .)
+                                        IO.WriteLine(value); .)      
     | "print" Expression<out value> ";"        
     } EOF .
 
@@ -40,17 +40,18 @@ PRODUCTIONS
     
     
 
-  Factor<out double factVal>         (. factVal = 0.0; .)
+  Factor<out double factVal>         (. factVal = 0.0; double a=0,b=0;.)
   =   Number                         (. try {
                                           factVal = Convert.ToDouble(token.val);
                                         } catch (Exception) {
                                           factVal = 0; SemError("number out of range");
                                         } .)
     | Variable                       (. int index = token.val[0] - 'A';
+                                        if (mem[index] == -1) SemError("Variable has not been assigned a value.");
                                         factVal = mem[index]; .)
     | "(" Expression<out factVal> ")"  
-    | "Sqrt" "(" Factor<out factVal> ")"   (. factVal = Math.Sqrt(factVal); .) 
-    | "Max" "(" Factor<out factVal> "," Factor<out factVal> ")" (. Math.Max(factVal,factVal); .) .
+    | "sqrt" "(" Expression<out factVal> ")"   (. factVal = Math.Sqrt(factVal); .) 
+    | "max" "(" Expression<out a> "," Expression<out b> ")" (. factVal = Math.Max(a,b); .) .
       
 
 END Calc.
