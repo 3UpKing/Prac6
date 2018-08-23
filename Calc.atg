@@ -18,10 +18,11 @@ IGNORE CHR(0) .. CHR(31)
 
 PRODUCTIONS
   Calc                               (. int index = 0; double value = 0.0;
-                                        for (int i = 0; i < 26; i++) mem[i] = 0.0; .)
+                                        for (int i = 0; i < 26; i++) mem[i] = 0.0; .) 
   = { Variable                       (. index = token.val[0] - 'A'; .)
       "=" Expression<out value>      (. mem[index] = value;
                                         IO.WriteLine(value); .)
+    | "print" Expression<out value> ";"        
     } EOF .
 
   Expression<out double expVal>      (. double expVal1 = 0.0; .)
@@ -48,7 +49,8 @@ PRODUCTIONS
     | Variable                       (. int index = token.val[0] - 'A';
                                         factVal = mem[index]; .)
     | "(" Expression<out factVal> ")"  
-    | "Sqrt" "(" Factor<out factVal> ")"   (. factVal = Math.Sqrt(factVal); .) .  
+    | "Sqrt" "(" Factor<out factVal> ")"   (. factVal = Math.Sqrt(factVal); .) 
+    | "Max" "(" Factor<out factVal> "," Factor<out factVal> ")" (. Math.Max(factVal,factVal); .) .
       
 
 END Calc.
