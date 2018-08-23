@@ -28,13 +28,16 @@ PRODUCTIONS
   = Term<out expVal>
     {   "+" Term<out expVal1>        (. expVal += expVal1; .)
       | "-" Term<out expVal1>        (. expVal -= expVal1; .)
-    } .
+    } .    
 
   Term<out double termVal>           (. double termVal1 = 0.0; .)
   = Factor<out termVal>
     {   "*" Factor<out termVal1>     (. termVal *= termVal1; .)
       | "/" Factor<out termVal1>     (. if (termVal1 == 0) SemError("Div by 0 error."); termVal /= termVal1; .)
     } .
+    
+    
+    
 
   Factor<out double factVal>         (. factVal = 0.0; .)
   =   Number                         (. try {
@@ -44,7 +47,8 @@ PRODUCTIONS
                                         } .)
     | Variable                       (. int index = token.val[0] - 'A';
                                         factVal = mem[index]; .)
-    | "(" Expression<out factVal> ")"
-    .
+    | "(" Expression<out factVal> ")"  
+    | "Sqrt" "(" Factor<out factVal> ")"   (. factVal = Math.Sqrt(factVal); .) .  
+      
 
 END Calc.
