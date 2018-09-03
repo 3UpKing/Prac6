@@ -6,6 +6,7 @@ COMPILER Check4 $CN
 // This version uses a static Arraylist, but no parameters
 
 static List<int> IPList = new List<int> ();
+static List<string> NameList = new List<string> ();
 
 IGNORECASE
 
@@ -29,9 +30,14 @@ PRODUCTIONS
   EOF                           (. if (Successful()) IO.WriteLine("all correct"); .)
   .
 
-  Entry
-  = IPNumber name .
-
+  Entry							(.string s;.)
+  = [IPNumber] Name<out s>  			 .			
+	
+  Name<out string s>
+  =  name                          (. s = token.val;
+                                   if (NameList.Contains(s)) SemError("duplicate IP name");
+                                   else NameList.Add(s); .)
+	.
   IPNumber
   =                             (. int n, m; .)
   Number<out n>
