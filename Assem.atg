@@ -2,7 +2,7 @@ using Library;
 
 COMPILER Assem $NC
 /* Simple assembler for the PVM - C# version
-   P.D. Terry, Rhodes University, 2015 */
+   Chifamba, Chiyoka, Mutowo, Ngwarai,2018 */
 
   const bool known = true;
 
