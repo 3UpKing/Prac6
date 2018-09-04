@@ -42,16 +42,17 @@ PRODUCTIONS
 
   OneWord
   = (   "ADD"  | "AND"  | "ANEW" | "CEQ"  | "CGE"  | "CGT"  | "CLE"  | "CLT"
-      | "CNE"  | "DIV"  | "HALT" | "INPB" | "INPI" | "LDV"  | "LDXA" | "MUL"
+      | "CNE"  | "DEC" | "DIV"  | "HALT" | "INC" | "INPB" | "INPI" | "LDV"  | "LDXA" | "MUL"
       | "NEG"  | "NOP"  | "NOT"  | "OR"   | "PRNB" | "PRNI" | "PRNL" | "REM"
       | "STO"  | "SUB" )         (. CodeGen.OneWord(token.val); .)
   .
 
-  TwoWord                        (. int value; .)
-  = ( "DSP" | "LDC" | "LDA" )    (. string mnemonic = token.val; .)
-    Number<out value>            (. CodeGen.TwoWord(mnemonic, value); .)
+  TwoWord                                                         (. int value; .)
+  = ( "DSP" | "LDC" | "LDA" | "LDL" | "STL"
+      | "LDL_" | "LDC_" | "LDA_" | "STL_")                        (. string mnemonic = token.val; .)
+    Number<out value>                                             (. CodeGen.TwoWord(mnemonic, value); .)
   .
-
+/* So fact1-3 are parsing but fact 3 is not interpreting properly. Evidently, the extended opcodes aren't working well*/
   Number<out int value>
   = number                       (. try {
                                       value = Convert.ToInt32(token.val);
