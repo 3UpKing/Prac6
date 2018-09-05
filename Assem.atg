@@ -44,16 +44,22 @@ PRODUCTIONS
   = ((   "ADD"  | "AND"  | "ANEW" | "CEQ"  | "CGE"  | "CGT"  | "CLE"  | "CLT"
       | "CNE"  | "DIV"  | "HALT" | "INPB" | "INPI" | "LDV"  | "LDXA" | "MUL"
       | "NEG"  | "NOP"  | "NOT"  | "OR"   | "PRNB" | "PRNI" | "PRNL" | "REM"
-      | "STO"  | "SUB" | "INC" | "DEC")
+      | "STO"  | "SUB" | "INC" | "DEC" | "LDL_0" | "LDL_1" | "LDL_2" | "LDL_3" 
+      | "LDC_0" |  "LDC_1" | "LDC_2" | "LDC_3" | "LDA_0" |"LDA_1" | "LDA_2" 
+      | "LDA_3"  | "STL_0" | "STL_1" | "STL_2" | "STL_3")) 
       
-      | (("LDL_" | "LDC_" | "LDA_" | "STL_") ("0"| "1" | "2" | "3" )) )
+   
                (. CodeGen.OneWord(token.val); .)
   .
 
-  TwoWord                        (. int value =0; .)
-  = ( "DSP" | "LDC" | "LDA" | "LDL" | "STL")    (. string mnemonic = token.val; .)
+  TwoWord                            (. int value =0; string mnemonic="";.)
+
+  = ("DSP" | "LDC") (. mnemonic = token.val; .) Number<out value>  
+    | ( "LDA" | "LDL" | "STL")      (.  mnemonic = token.val; .)
+
     ( Number<out value>            
-    )   (. CodeGen.TwoWord(mnemonic, value); .)
+    | identifier 
+    ) (. CodeGen.TwoWord(mnemonic, value); .)
   .
 
   
