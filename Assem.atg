@@ -40,15 +40,9 @@ PRODUCTIONS
   Statement
   = OneWord | TwoWord | WriteString | Label | Branch .
 
-<<<<<<< HEAD
   OneWord                             (. int value=0; .)
   = ((   "ADD"  | "AND"  | "ANEW" | "CEQ"  | "CGE"  | "CGT"  | "CLE"  | "CLT"
       | "CNE"  | "DIV"  | "HALT" | "INPB" | "INPI" | "LDV"  | "LDXA" | "MUL"
-=======
-  OneWord
-  = (   "ADD"  | "AND"  | "ANEW" | "CEQ"  | "CGE"  | "CGT"  | "CLE"  | "CLT"
-      | "CNE"  | "DEC" | "DIV"  | "HALT" | "INC" | "INPB" | "INPI" | "LDV"  | "LDXA" | "MUL"
->>>>>>> b35f90d2f211205572ffeecc0823e1d5012481b6
       | "NEG"  | "NOP"  | "NOT"  | "OR"   | "PRNB" | "PRNI" | "PRNL" | "REM"
       | "STO"  | "SUB" | "INC" | "DEC")
       
@@ -56,7 +50,6 @@ PRODUCTIONS
                (. CodeGen.OneWord(token.val); .)
   .
 
-<<<<<<< HEAD
   TwoWord                        (. int value =0; .)
   = ( "DSP" | "LDC" | "LDA" | "LDL" | "STL")    (. string mnemonic = token.val; .)
     (Number<out value>            
@@ -65,14 +58,8 @@ PRODUCTIONS
 
   Identifier<out int value>
   = identifier                   (. value = VarTable.FindOffset(token.val); .)
-=======
-  TwoWord                                                         (. int value; .)
-  = ( "DSP" | "LDC" | "LDA" | "LDL" | "STL"
-      | "LDL_" | "LDC_" | "LDA_" | "STL_")                        (. string mnemonic = token.val; .)
-    Number<out value>                                             (. CodeGen.TwoWord(mnemonic, value); .)
->>>>>>> b35f90d2f211205572ffeecc0823e1d5012481b6
   .
-/* So fact1-3 are parsing but fact 3 is not interpreting properly. Evidently, the extended opcodes aren't working well*/
+  
   Number<out int value>
   = number                       (. try {
                                       value = Convert.ToInt32(token.val);
