@@ -40,16 +40,24 @@ PRODUCTIONS
   Statement
   = OneWord | TwoWord | WriteString | Label | Branch .
 
-  OneWord
-  = (   "ADD"  | "AND"  | "ANEW" | "CEQ"  | "CGE"  | "CGT"  | "CLE"  | "CLT"
+  OneWord                             (. int value=0; .)
+  = ((   "ADD"  | "AND"  | "ANEW" | "CEQ"  | "CGE"  | "CGT"  | "CLE"  | "CLT"
       | "CNE"  | "DIV"  | "HALT" | "INPB" | "INPI" | "LDV"  | "LDXA" | "MUL"
       | "NEG"  | "NOP"  | "NOT"  | "OR"   | "PRNB" | "PRNI" | "PRNL" | "REM"
-      | "STO"  | "SUB" )         (. CodeGen.OneWord(token.val); .)
+      | "STO"  | "SUB" | "INC" | "DEC")
+      
+      | (("LDL_" | "LDC_" | "LDA_" | "STL_") Number<out value>)) 
+               (. CodeGen.OneWord(token.val); .)
   .
 
-  TwoWord                        (. int value; .)
-  = ( "DSP" | "LDC" | "LDA" )    (. string mnemonic = token.val; .)
-    Number<out value>            (. CodeGen.TwoWord(mnemonic, value); .)
+  TwoWord                        (. int value =0; .)
+  = ( "DSP" | "LDC" | "LDA" | "LDL" | "STL")    (. string mnemonic = token.val; .)
+    (Number<out value>            
+    | Identifier<out value>)   (. CodeGen.TwoWord(mnemonic, value); .)
+  .
+
+  Identifier<out int value>
+  = identifier                   (. value = VarTable.FindOffset(token.val); .)
   .
 
   Number<out int value>
